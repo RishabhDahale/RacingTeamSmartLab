@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradiant"
     tools:context=".StartActivity">
 
 
     <LinearLayout
+        android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -25,10 +25,11 @@
                 android:id="@+id/InventoryButton"
                 android:text="Inventory"
                 android:background="@drawable/inventory"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                />
+                android:onClick="inventoryPage"
+                android:textColor="#16a8af" />
 
         </android.support.v7.widget.CardView>
 
@@ -42,8 +43,10 @@
             android:layout_toRightOf="@id/InventoryCard">
 
             <Button
-                android:background="#00000000"
+                android:textColor="#ff00ff"
+                android:background="@drawable/machine"
                 android:text="Machines"
+                android:textSize="24sp"
                 android:textAlignment="center"
                 android:id="@+id/MachineButton"
                 android:layout_width="match_parent"
