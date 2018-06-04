@@ -4,17 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradiant"
     tools:context=".StartActivity">
 
 
     <LinearLayout
+        android:id="@+id/Linear1"
+        android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
         <android.support.v7.widget.CardView
             android:id="@+id/InventoryCard"
-            android:layout_width="150dp"
+            android:layout_width="180dp"
             android:layout_margin="10dp"
             android:background="@drawable/inventory"
             android:layout_height="130dp"
@@ -23,12 +24,13 @@
             <Button
                 android:textAlignment="center"
                 android:id="@+id/InventoryButton"
-                android:text="Inventory"
                 android:background="@drawable/inventory"
-                android:textSize="18sp"
+                android:text="Inventory"
+                android:textSize="24sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                />
+                android:onClick="inventoryPage"
+                android:textColor="#16a8af" />
 
         </android.support.v7.widget.CardView>
 
@@ -42,14 +44,62 @@
             android:layout_toRightOf="@id/InventoryCard">
 
             <Button
-                android:background="#00000000"
+                android:textColor="#ff00ff"
+                android:background="@drawable/machine"
                 android:text="Machines"
+                android:textSize="24sp"
                 android:textAlignment="center"
                 android:id="@+id/MachineButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </android.support.v7.widget.CardView>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@id/Linear1"
+        android:id="@+id/Linear2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/loginCard"
+            android:layout_width="180dp"
+            android:layout_margin="10dp"
+            android:background="#00000000"
+            android:layout_weight="1"
+            android:layout_height="130dp">
+
+            <Button
+                android:id="@+id/loginButton"
+                android:text="Create Notification"
+                android:textSize="24sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="180dp"
+            android:id="@+id/loginCard"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_height="130dp">
+
+            <Button
+                android:id="@+id/loginButton"
+                android:text="Login"
+                android:textSize="24sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v7.widget.CardView>
+
 
     </LinearLayout>
+
+
+
+
 </RelativeLayout>
