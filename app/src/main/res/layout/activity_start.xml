@@ -64,7 +64,7 @@
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/loginCard"
+            android:id="@+id/notificationCard"
             android:layout_width="180dp"
             android:layout_margin="10dp"
             android:background="#00000000"
@@ -72,7 +72,7 @@
             android:layout_height="130dp">
 
             <Button
-                android:id="@+id/loginButton"
+                android:id="@+id/notificationButton"
                 android:text="Create Notification"
                 android:textSize="24sp"
                 android:layout_width="match_parent"

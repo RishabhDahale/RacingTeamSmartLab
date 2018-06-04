@@ -9,5 +9,7 @@ public class InventoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
+        //TODO Connect the google sheets api to this
+
     }
 }
