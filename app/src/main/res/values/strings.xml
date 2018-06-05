@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RacingTeam SmartLab</string>
+    <string name="inventory">Inventory</string>
+    <string name="machines">Machines</string>
+    <string name="create_notification">Create Notification</string>
+    <string name="login">Login</string>
 </resources>
