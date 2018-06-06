@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "606138030054",
+    "firebase_url": "https://racingteam-smartlab.firebaseio.com",
+    "project_id": "racingteam-smartlab",
+    "storage_bucket": "racingteam-smartlab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606138030054:android:94082ded8b77487a",
+        "android_client_info": {
+          "package_name": "com.example.fourofour.racingteamsmartlab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "606138030054-gqam8oujjh3dp0vs9haohj2h4ccmb9r4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fourofour.racingteamsmartlab",
+            "certificate_hash": "5e462570619a42684d5c5e2fe7c7a60e308aef99"
+          }
+        },
+        {
+          "client_id": "606138030054-6bmamt0lk73hnsdu3d9bt0be5hddh2m5.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "606138030054-6bmamt0lk73hnsdu3d9bt0be5hddh2m5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuQVpsUtRKH8XLcp-OigDyM1aBr9Ltu4A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "606138030054-6bmamt0lk73hnsdu3d9bt0be5hddh2m5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
