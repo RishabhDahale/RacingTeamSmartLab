@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.fourofour.racingteamsmartlab"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -32,4 +32,17 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
     implementation 'com.android.support:cardview-v7:27.1.1'
+
+    //Add firebase
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-auth:16.0.1'
+
+    // For google login
+    implementation 'com.firebaseui:firebase-ui-auth:4.0.1'
+
+    //For Notification
+    implementation 'com.google.firebase:firebase-messaging:17.0.0'
+
 }
+
+apply plugin: 'com.google.gms.google-services'
