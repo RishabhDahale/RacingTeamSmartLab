@@ -180,6 +180,7 @@ public class NotificationActivity extends AppCompatActivity {
             }
         };
         mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
+        
 
     }
 
