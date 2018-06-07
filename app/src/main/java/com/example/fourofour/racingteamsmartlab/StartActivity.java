@@ -48,24 +48,24 @@ public class StartActivity extends AppCompatActivity {
                     }
                 });
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user!= null) {
-                    onSignedInInitialize(user.getDisplayName());
-
-                } else {
-                    onSignedOutCleanUp();
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder().setIsSmartLockEnabled(false)
-                                    .setAvailableProviders(providers)
-                                    .build(),
-                            RC_SIGN_IN);
-                }
-            }
-        };
+//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                FirebaseUser user = firebaseAuth.getCurrentUser();
+//                if (user!= null) {
+//                    onSignedInInitialize(user.getDisplayName());
+//
+//                } else {
+//                    onSignedOutCleanUp();
+//                    startActivityForResult(
+//                            AuthUI.getInstance()
+//                                    .createSignInIntentBuilder().setIsSmartLockEnabled(false)
+//                                    .setAvailableProviders(providers)
+//                                    .build(),
+//                            RC_SIGN_IN);
+//                }
+//            }
+//        };
 
     }
 
@@ -89,24 +89,29 @@ public class StartActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+//    }
+//
+//    private void onSignedInInitialize(String username) {
+//        mUsername = username;
+//    }
+//
+//    private void onSignedOutCleanUp () {
+//        mUsername = "ANONYMOUS";
+//    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-    }
-
-    private void onSignedInInitialize(String username) {
-        mUsername = username;
-    }
-
-    private void onSignedOutCleanUp () {
-        mUsername = "ANONYMOUS";
+    public void notificationPage (View view) {
+        Intent i = new Intent(this, NotificationActivity.class);
+        startActivity(i);
     }
 
 }
