@@ -40,6 +40,10 @@ dependencies {
     // For google login
     implementation 'com.firebaseui:firebase-ui-auth:4.0.1'
 
+    //Adding firebase realtime database
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-database:16.0.1'
+
     //For Notification
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
 
