@@ -6,4 +6,5 @@
     <string name="login">Login</string>
     <string name="send_button_label">Send</string>
     <string name="notification_text">Notification Text</string>
+    <string name="sign_out">Sign Out</string>
 </resources>
