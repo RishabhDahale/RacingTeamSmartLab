@@ -1,8 +1,15 @@
 package com.example.fourofour.racingteamsmartlab;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationBuilderWithBuilderAccessor;
+import android.support.v4.media.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -41,6 +48,7 @@ public class NotificationActivity extends AppCompatActivity {
     public static final String ANONYMOUS = "anonymous";
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
     public static final int RC_SIGN_IN = 1;
+    public boolean mePosting = false;
 
     private ListView mMessageListView;
     private MessageAdapter mMessageAdapter;
@@ -84,14 +92,6 @@ public class NotificationActivity extends AppCompatActivity {
         // Initialize progress bar
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
-        // ImagePickerButton shows an image picker to upload a image for a message
-        mPhotoPickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: Fire an intent to show an image picker
-            }
-        });
-
         // Enable Send button when there's text to send
         mMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -119,8 +119,7 @@ public class NotificationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, null);
                 mMessagesDatabaseReference.push().setValue(friendlyMessage);
-
-                // Clear input box
+                mePosting = true;
                 mMessageEditText.setText("");
             }
         });
@@ -130,6 +129,13 @@ public class NotificationActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
                 mMessageAdapter.add(friendlyMessage);
+//                notificationCall(friendlyMessage.getText());
+                if(mePosting) {
+                    mePosting=false;
+                }
+                else {
+                    notificationCall(friendlyMessage.getName() ,friendlyMessage.getText());
+                }
             }
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -167,16 +173,54 @@ public class NotificationActivity extends AppCompatActivity {
             }
         };
 
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
+        Button signOut = (Button)findViewById(R.id.signOut);
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AuthUI.getInstance()
+                        .signOut(getApplicationContext())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // ...
+                            }
+                        });
+            }
+        });
+
+//        AuthUI.getInstance()
+//                        .signOut(getApplicationContext())
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                // ...
+//                            }
+//                        });
+
+
+
     }
 
-
+//    private void checkMessages() {
+//        mChildEventListener = new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
+//                mMessageAdapter.add(friendlyMessage);
+//                notificationCall(friendlyMessage.getName() ,friendlyMessage.getText());
+//            }
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//            }
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//            }
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//            }
+//        };
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -188,6 +232,24 @@ public class NotificationActivity extends AppCompatActivity {
         super.onPause();
         mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
     }
+
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        checkMessages();
+//    }
+
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        checkMessages();
+//    }
+//
+//    @SuppressLint("MissingSuperCall")
+//    @Override
+//    protected void onDestroy() {
+//        checkMessages();
+//    }
 
     @Override
     protected void onResume() {
@@ -223,6 +285,26 @@ public class NotificationActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
+    }
+
+    private void notificationCall(String name ,String notificationText) {
+
+        android.support.v4.app.NotificationCompat.Builder notificationBuilder = new android.support.v4.app.NotificationCompat.Builder(this)
+                .setSmallIcon(android.R.drawable.stat_notify_chat)
+                .setDefaults(android.support.v4.app.NotificationCompat.DEFAULT_ALL)
+                .setContentTitle("Racing Team- " + name)
+                .setContentText(notificationText);
+
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, NotificationActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationBuilder.setContentIntent(contentIntent);
+
+
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, notificationBuilder.build());
+
     }
 
 
