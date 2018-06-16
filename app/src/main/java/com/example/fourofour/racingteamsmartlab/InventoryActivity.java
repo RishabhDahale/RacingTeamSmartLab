@@ -49,7 +49,8 @@ public class InventoryActivity extends Activity
         implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
-    private Button mCallApiButton;
+    static final int sheets=1;
+    private Button mCallApiButton1;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -57,7 +58,7 @@ public class InventoryActivity extends Activity
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static final String BUTTON_TEXT = "Call Google Sheets API";
+    private static final String BUTTON_TEXT1 = "Machining Lab";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { SheetsScopes.SPREADSHEETS_READONLY };
 
@@ -80,18 +81,19 @@ public class InventoryActivity extends Activity
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        mCallApiButton = new Button(this);
-        mCallApiButton.setText(BUTTON_TEXT);
-        mCallApiButton.setOnClickListener(new View.OnClickListener() {
+        mCallApiButton1 = new Button(this);
+        mCallApiButton1.setText(BUTTON_TEXT1);
+        mCallApiButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallApiButton.setEnabled(false);
+                mCallApiButton1.setEnabled(false);
                 mOutputText.setText("");
                 getResultsFromApi();
-                mCallApiButton.setEnabled(true);
+                mCallApiButton1.setEnabled(true);
             }
         });
-        activityLayout.addView(mCallApiButton);
+        activityLayout.addView(mCallApiButton1);
+        
 
         mOutputText = new TextView(this);
         mOutputText.setLayoutParams(tlp);
@@ -99,7 +101,7 @@ public class InventoryActivity extends Activity
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
         mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
+                "Click the \'" + BUTTON_TEXT1 +"\' button to import its data");
         activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
@@ -382,7 +384,7 @@ public class InventoryActivity extends Activity
             if (output == null || output.size() == 0) {
                 mOutputText.setText("No results returned.");
             } else {
-                output.add(0, "Data retrieved using the Google Sheets API:");
+                output.add(0, "Data:");
                 mOutputText.setText(TextUtils.join("\n", output));
             }
         }
