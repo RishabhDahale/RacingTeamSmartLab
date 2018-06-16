@@ -160,7 +160,6 @@ public class NotificationActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user!= null) {
                     onSignedInInitialize(user.getDisplayName());
-
                 } else {
                     onSignedOutCleanUp();
                     startActivityForResult(
@@ -186,6 +185,8 @@ public class NotificationActivity extends AppCompatActivity {
                         });
             }
         });
+
+
 
 //        AuthUI.getInstance()
 //                        .signOut(getApplicationContext())
