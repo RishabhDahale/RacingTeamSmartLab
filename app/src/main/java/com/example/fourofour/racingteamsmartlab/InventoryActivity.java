@@ -93,6 +93,7 @@ public class InventoryActivity extends Activity
             }
         });
         activityLayout.addView(mCallApiButton1);
+        
 
         mOutputText = new TextView(this);
         mOutputText.setLayoutParams(tlp);
