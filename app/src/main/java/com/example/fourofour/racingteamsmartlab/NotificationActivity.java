@@ -135,6 +135,7 @@ public class NotificationActivity extends AppCompatActivity {
                 mMessageAdapter.add(friendlyMessage);
 //                notificationCall(friendlyMessage.getText());
 
+                  
                 if (mUsername != friendlyMessage.getName()) {
                     postName = friendlyMessage.getName();
                     postMessage = friendlyMessage.getText();
