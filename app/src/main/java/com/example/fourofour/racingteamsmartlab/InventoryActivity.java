@@ -49,16 +49,19 @@ public class InventoryActivity extends Activity
         implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
-    static final int sheets=1;
+    //static final int sheets=1;
     private Button mCallApiButton1;
+    private Button mCallApiButton2;
     ProgressDialog mProgress;
-
+    static final String range1= "Machining Lab!D4:E16";
+    static final String range2= "Museum!B2:C24";
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
     private static final String BUTTON_TEXT1 = "Machining Lab";
+    private static final String BUTTON_TEXT2 = "Museum";
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { SheetsScopes.SPREADSHEETS_READONLY };
 
@@ -83,17 +86,28 @@ public class InventoryActivity extends Activity
 
         mCallApiButton1 = new Button(this);
         mCallApiButton1.setText(BUTTON_TEXT1);
+        mCallApiButton2 = new Button(this);
+        mCallApiButton2.setText(BUTTON_TEXT2);
         mCallApiButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCallApiButton1.setEnabled(false);
                 mOutputText.setText("");
-                getResultsFromApi();
+                getResultsFromApi(range1);
                 mCallApiButton1.setEnabled(true);
             }
         });
+        mCallApiButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallApiButton2.setEnabled(false);
+                mOutputText.setText("");
+                getResultsFromApi(range2);
+                mCallApiButton2.setEnabled(true);
+            }
+        });
         activityLayout.addView(mCallApiButton1);
-        
+        activityLayout.addView(mCallApiButton2);
 
         mOutputText = new TextView(this);
         mOutputText.setLayoutParams(tlp);
@@ -124,15 +138,15 @@ public class InventoryActivity extends Activity
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
-    private void getResultsFromApi() {
+    private void getResultsFromApi(String range) {
         if (! isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
-            chooseAccount();
+            chooseAccount(range);
         } else if (! isDeviceOnline()) {
             mOutputText.setText("No network connection available.");
         } else {
-            new MakeRequestTask(mCredential).execute();
+            new MakeRequestTask(mCredential,range).execute();
         }
     }
 
@@ -147,14 +161,14 @@ public class InventoryActivity extends Activity
      * is granted.
      */
     @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
-    private void chooseAccount() {
+    private void chooseAccount(String range) {
         if (EasyPermissions.hasPermissions(
                 this, Manifest.permission.GET_ACCOUNTS)) {
             String accountName = getPreferences(Context.MODE_PRIVATE)
                     .getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
-                getResultsFromApi();
+                getResultsFromApi(range);
             } else {
                 // Start a dialog from which the user can choose an account
                 startActivityForResult(
@@ -192,7 +206,7 @@ public class InventoryActivity extends Activity
                             "This app requires Google Play Services. Please install " +
                                     "Google Play Services on your device and relaunch this app.");
                 } else {
-                    getResultsFromApi();
+                    getResultsFromApi(range1);
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
@@ -207,13 +221,13 @@ public class InventoryActivity extends Activity
                         editor.putString(PREF_ACCOUNT_NAME, accountName);
                         editor.apply();
                         mCredential.setSelectedAccountName(accountName);
-                        getResultsFromApi();
+                        getResultsFromApi(range1);
                     }
                 }
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
-                    getResultsFromApi();
+                    getResultsFromApi(range1);
                 }
                 break;
         }
@@ -247,7 +261,6 @@ public class InventoryActivity extends Activity
     public void onPermissionsGranted(int requestCode, List<String> list) {
         // Do nothing.
     }
-
     /**
      * Callback for when a permission is denied using the EasyPermissions
      * library.
@@ -322,8 +335,10 @@ public class InventoryActivity extends Activity
     private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
         private com.google.api.services.sheets.v4.Sheets mService = null;
         private Exception mLastError = null;
+        private String sh_r;
 
-        MakeRequestTask(GoogleAccountCredential credential) {
+        MakeRequestTask(GoogleAccountCredential credential, String sheet_range) {
+            sh_r=sheet_range;
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
             mService = new com.google.api.services.sheets.v4.Sheets.Builder(
@@ -355,7 +370,7 @@ public class InventoryActivity extends Activity
          */
         private List<String> getDataFromApi() throws IOException {
             String spreadsheetId = "1H6xIF2DMK9nbQxLXjZmySRuoE-n1z1Ya9LqPQsSnceM";
-            String range = "Machining Lab!D4:E16";
+            String range = sh_r;
             List<String> results = new ArrayList<String>();
             ValueRange response = this.mService.spreadsheets().values()
                     .get(spreadsheetId, range)
