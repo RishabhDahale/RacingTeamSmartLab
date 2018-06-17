@@ -48,21 +48,25 @@ public class NotificationActivity extends AppCompatActivity {
     public static final String ANONYMOUS = "anonymous";
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
     public static final int RC_SIGN_IN = 1;
+    private String name;
     public boolean mePosting = false;
+    public static boolean isLoggedIn;
+    public static String postName;
+    public static String postMessage;
 
     private ListView mMessageListView;
-    private MessageAdapter mMessageAdapter;
+    private static MessageAdapter mMessageAdapter;
     private ProgressBar mProgressBar;
     private ImageButton mPhotoPickerButton;
     private EditText mMessageEditText;
     private Button mSendButton;
 
-    private String mUsername;
+    private static String mUsername;
 
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
-    private ChildEventListener mChildEventListener;
+    private static ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -130,12 +134,15 @@ public class NotificationActivity extends AppCompatActivity {
                 FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
                 mMessageAdapter.add(friendlyMessage);
 //                notificationCall(friendlyMessage.getText());
-                if(mePosting) {
-                    mePosting=false;
-                }
-                else {
+
+                  
+                if (mUsername != friendlyMessage.getName()) {
+                    postName = friendlyMessage.getName();
+                    postMessage = friendlyMessage.getText();
                     notificationCall(friendlyMessage.getName() ,friendlyMessage.getText());
                 }
+
+
             }
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -160,7 +167,7 @@ public class NotificationActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user!= null) {
                     onSignedInInitialize(user.getDisplayName());
-
+                    isLoggedIn = true;
                 } else {
                     onSignedOutCleanUp();
                     startActivityForResult(
@@ -169,6 +176,7 @@ public class NotificationActivity extends AppCompatActivity {
                                     .setAvailableProviders(providers)
                                     .build(),
                             RC_SIGN_IN);
+                    isLoggedIn = false;
                 }
             }
         };
@@ -177,6 +185,7 @@ public class NotificationActivity extends AppCompatActivity {
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isLoggedIn = false;
                 AuthUI.getInstance()
                         .signOut(getApplicationContext())
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -187,6 +196,8 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
 
+
+
 //        AuthUI.getInstance()
 //                        .signOut(getApplicationContext())
 //                        .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -196,31 +207,30 @@ public class NotificationActivity extends AppCompatActivity {
 //                        });
 
 
-
     }
 
-//    private void checkMessages() {
-//        mChildEventListener = new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
-//                mMessageAdapter.add(friendlyMessage);
-//                notificationCall(friendlyMessage.getName() ,friendlyMessage.getText());
-//            }
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//            }
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//            }
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//            }
-//        };
-//    }
+    public void checkMessages() {
+        mChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
+                mMessageAdapter.add(friendlyMessage);
+                notificationCall(friendlyMessage.getName() ,friendlyMessage.getText());
+            }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        };
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -287,7 +297,7 @@ public class NotificationActivity extends AppCompatActivity {
         return true;
     }
 
-    private void notificationCall(String name ,String notificationText) {
+    public void notificationCall(String name, String notificationText) {
 
         android.support.v4.app.NotificationCompat.Builder notificationBuilder = new android.support.v4.app.NotificationCompat.Builder(this)
                 .setSmallIcon(android.R.drawable.stat_notify_chat)
@@ -305,6 +315,22 @@ public class NotificationActivity extends AppCompatActivity {
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, notificationBuilder.build());
 
+    }
+
+    public static String getName() {
+        return postName;
+    }
+
+    public static String getText() {
+        return postMessage;
+    }
+
+    public static boolean loginStatus() {
+        return isLoggedIn;
+    }
+
+    public static String userName() {
+        return mUsername;
     }
 
 

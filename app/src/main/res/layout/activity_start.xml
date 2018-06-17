@@ -26,7 +26,7 @@
                 android:id="@+id/InventoryButton"
                 android:background="@drawable/inventory"
                 android:text="@string/inventory"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:onClick="inventoryPage"
@@ -48,7 +48,7 @@
                 android:textColor="#ff00ff"
                 android:background="@drawable/machine"
                 android:text="@string/machines"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textAlignment="center"
                 android:id="@+id/MachineButton"
                 android:layout_width="match_parent"
@@ -92,7 +92,7 @@
             <Button
                 android:id="@+id/loginButton"
                 android:text="@string/login"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
