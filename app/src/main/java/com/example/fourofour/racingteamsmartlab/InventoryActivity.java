@@ -53,8 +53,8 @@ public class InventoryActivity extends Activity
     private Button mCallApiButton1;
     private Button mCallApiButton2;
     ProgressDialog mProgress;
-    static final String range1= "Machining Lab!D4:E16";
-    static final String range2= "Museum!B2:C24";
+    static final String range1= "Machining Lab!C3:G65";
+    static final String range2= "Museum!A1:E24";
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -371,15 +371,14 @@ public class InventoryActivity extends Activity
         private List<String> getDataFromApi() throws IOException {
             String spreadsheetId = "1H6xIF2DMK9nbQxLXjZmySRuoE-n1z1Ya9LqPQsSnceM";
             String range = sh_r;
-            List<String> results = new ArrayList<String>();
+            List<String> results = new ArrayList<>();
             ValueRange response = this.mService.spreadsheets().values()
                     .get(spreadsheetId, range)
                     .execute();
             List<List<Object>> values = response.getValues();
             if (values != null) {
-                results.add("Item Name - Quantity");
                 for (List row : values) {
-                    results.add(row.get(0) + " - " + row.get(1));
+                    results.add(row.get(0) + "  " + row.get(1) + " - " + row.get(2) + " (" + row.get(3) + ")");
                 }
             }
             return results;
