@@ -12,12 +12,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.services.sheets.v4.model.Color;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,14 +32,41 @@ public class StartActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private Button labStatus;
 
+    public static boolean inLab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        labStatus= findViewById(R.id.labButton);
+        inLab=false;
+        TextView labstatus= findViewById(R.id.self_occupancy_status);
+        labstatus.setText("Status- not in lab");
+        labstatus.setTextColor(getResources().getColor(R.color.Red));
+        labStatus.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                changeText(inLab);
+                inLab= !inLab;
+            }
+        });
     }
+
+    private void changeText(Boolean inlab) {
+        TextView changetext= findViewById(R.id.self_occupancy_status);
+        if(!inlab) {
+            changetext.setText("Status- in lab");
+            changetext.setTextColor(getResources().getColor(R.color.Green));
+        }
+        else {
+            changetext.setText("Status- not in lab");
+            changetext.setTextColor(getResources().getColor(R.color.Red));
+        }
+    }
+
 
     public void inventoryPage(View view) {
         Intent i = new Intent(this, InventoryActivity.class);
@@ -51,33 +80,6 @@ public class StartActivity extends AppCompatActivity {
     public void notificationPage (View view) {
         Intent i = new Intent(this, NotificationActivity.class);
         startActivity(i);
-    }
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    protected void onDestroy() {
-        if(NotificationActivity.loginStatus()) {
-            String name = NotificationActivity.getName();
-            String notificationText = NotificationActivity.getText();
-
-            if(NotificationActivity.userName() != name) {
-                android.support.v4.app.NotificationCompat.Builder notificationBuilder = new android.support.v4.app.NotificationCompat.Builder(this)
-                        .setSmallIcon(android.R.drawable.stat_notify_chat)
-                        .setDefaults(android.support.v4.app.NotificationCompat.DEFAULT_ALL)
-                        .setContentTitle("Racing Team- " + name)
-                        .setContentText(notificationText);
-
-
-                PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                        new Intent(this, NotificationActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-
-                notificationBuilder.setContentIntent(contentIntent);
-
-
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(1, notificationBuilder.build());
-            }
-        }
     }
 
 
