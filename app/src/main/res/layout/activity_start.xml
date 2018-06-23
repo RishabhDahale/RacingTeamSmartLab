@@ -103,6 +103,17 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/signOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/Linear2"
+        android:background="#dddddd"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Sign Out" />
+
     <TextView
         android:id="@+id/self_occupancy_status"
         android:layout_width="wrap_content"
@@ -111,6 +122,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
         android:textSize="20sp"/>
+
+
 
 
 </RelativeLayout>

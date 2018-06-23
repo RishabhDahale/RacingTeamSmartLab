@@ -50,7 +50,7 @@ public class NotificationActivity extends AppCompatActivity {
     public static final int RC_SIGN_IN = 1;
     private String name;
     public boolean mePosting = false;
-    public static boolean isLoggedIn;
+
     public static String postName;
     public static String postMessage;
 
@@ -67,8 +67,7 @@ public class NotificationActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
     private static ChildEventListener mChildEventListener;
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +77,6 @@ public class NotificationActivity extends AppCompatActivity {
         mUsername = ANONYMOUS;
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseAuth = FirebaseAuth.getInstance();
         mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("messages");
 
         // Initialize references to views
@@ -135,7 +133,6 @@ public class NotificationActivity extends AppCompatActivity {
                 mMessageAdapter.add(friendlyMessage);
 //                notificationCall(friendlyMessage.getText());
 
-                  
                 if (mUsername != friendlyMessage.getName()) {
                     postName = friendlyMessage.getName();
                     postMessage = friendlyMessage.getText();
@@ -158,54 +155,6 @@ public class NotificationActivity extends AppCompatActivity {
             }
         };
         mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
-
-        final List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
-
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user!= null) {
-                    onSignedInInitialize(user.getDisplayName());
-                    isLoggedIn = true;
-                } else {
-                    onSignedOutCleanUp();
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder().setIsSmartLockEnabled(false)
-                                    .setAvailableProviders(providers)
-                                    .build(),
-                            RC_SIGN_IN);
-                    isLoggedIn = false;
-                }
-            }
-        };
-
-        Button signOut = (Button)findViewById(R.id.signOut);
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isLoggedIn = false;
-                AuthUI.getInstance()
-                        .signOut(getApplicationContext())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {
-                                // ...
-                            }
-                        });
-            }
-        });
-
-
-
-//        AuthUI.getInstance()
-//                        .signOut(getApplicationContext())
-//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                // ...
-//                            }
-//                        });
-
 
     }
 
@@ -237,58 +186,6 @@ public class NotificationActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-    }
-
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        checkMessages();
-//    }
-
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        checkMessages();
-//    }
-//
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onDestroy() {
-//        checkMessages();
-//    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-    }
-
-    private void onSignedInInitialize(String username) {
-        mUsername = username;
-    }
-
-    private void onSignedOutCleanUp () {
-        mUsername = "ANONYMOUS";
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_SIGN_IN) {
-            if(resultCode == RESULT_OK) {
-                Toast.makeText(this, "Signed In", Toast.LENGTH_LONG).show();
-            }
-            else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Sign In Cancelled", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -325,13 +222,6 @@ public class NotificationActivity extends AppCompatActivity {
         return postMessage;
     }
 
-    public static boolean loginStatus() {
-        return isLoggedIn;
-    }
-
-    public static String userName() {
-        return mUsername;
-    }
 
 
 }
