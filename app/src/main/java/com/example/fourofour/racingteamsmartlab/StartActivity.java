@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
-    private String mUsername;
+    private static String mUsername;
 
     private static final int RC_SIGN_IN = 123;
 
@@ -38,6 +38,10 @@ public class StartActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+    public static String getUserName() {
+        return mUsername;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +102,9 @@ public class StartActivity extends AppCompatActivity {
                 inLab= !inLab;
             }
         });
+
+
+
     }
 
     private void changeText(Boolean inlab) {
