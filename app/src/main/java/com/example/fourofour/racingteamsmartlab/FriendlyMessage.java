@@ -5,6 +5,7 @@ public class FriendlyMessage {
     private String text;
     private String name;
     private String photoUrl;
+    private boolean isSeen = false;
 
     public FriendlyMessage() {
     }
@@ -13,7 +14,6 @@ public class FriendlyMessage {
         this.text = text;
         this.name = name;
         this.photoUrl = photoUrl;
-
     }
 
     public String getText() {
@@ -39,5 +39,14 @@ public class FriendlyMessage {
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
+
+    public boolean seenStatus() {return isSeen;}
+
+    public void setStatus(boolean status) {
+        isSeen = status;
+        return;
+    }
+
+
 }
 

@@ -36,6 +36,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +52,8 @@ public class NotificationActivity extends AppCompatActivity {
     public static final int RC_SIGN_IN = 1;
     private String name;
     public boolean mePosting = false;
-    public static boolean isLoggedIn;
+    private static int notiNum=0;
+
     public static String postName;
     public static String postMessage;
 
@@ -67,8 +70,7 @@ public class NotificationActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
     private static ChildEventListener mChildEventListener;
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,6 @@ public class NotificationActivity extends AppCompatActivity {
         mUsername = ANONYMOUS;
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseAuth = FirebaseAuth.getInstance();
         mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("messages");
 
         // Initialize references to views
@@ -117,13 +118,14 @@ public class NotificationActivity extends AppCompatActivity {
         });
         mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
 
+        mUsername = StartActivity.getUserName();
+
         // Send button sends a message and clears the EditText
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, null);
                 mMessagesDatabaseReference.push().setValue(friendlyMessage);
-                mePosting = true;
                 mMessageEditText.setText("");
             }
         });
@@ -133,16 +135,6 @@ public class NotificationActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
                 mMessageAdapter.add(friendlyMessage);
-//                notificationCall(friendlyMessage.getText());
-
-                  
-                if (mUsername != friendlyMessage.getName()) {
-                    postName = friendlyMessage.getName();
-                    postMessage = friendlyMessage.getText();
-                    notificationCall(friendlyMessage.getName() ,friendlyMessage.getText());
-                }
-
-
             }
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -159,52 +151,26 @@ public class NotificationActivity extends AppCompatActivity {
         };
         mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
 
-        final List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+        Query query = FirebaseDatabase.getInstance().getReference().child("messages").orderByKey().limitToLast(1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user!= null) {
-                    onSignedInInitialize(user.getDisplayName());
-                    isLoggedIn = true;
-                } else {
-                    onSignedOutCleanUp();
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder().setIsSmartLockEnabled(false)
-                                    .setAvailableProviders(providers)
-                                    .build(),
-                            RC_SIGN_IN);
-                    isLoggedIn = false;
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    postName = child.child("name").getValue().toString();
+                    postMessage = child.child("text").getValue().toString();
+                    notificationCall(postName ,postMessage);
                 }
             }
-        };
 
-        Button signOut = (Button)findViewById(R.id.signOut);
-        signOut.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                isLoggedIn = false;
-                AuthUI.getInstance()
-                        .signOut(getApplicationContext())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {
-                                // ...
-                            }
-                        });
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 
 
 
-//        AuthUI.getInstance()
-//                        .signOut(getApplicationContext())
-//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                // ...
-//                            }
-//                        });
 
 
     }
@@ -237,58 +203,6 @@ public class NotificationActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-    }
-
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        checkMessages();
-//    }
-
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        checkMessages();
-//    }
-//
-//    @SuppressLint("MissingSuperCall")
-//    @Override
-//    protected void onDestroy() {
-//        checkMessages();
-//    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-    }
-
-    private void onSignedInInitialize(String username) {
-        mUsername = username;
-    }
-
-    private void onSignedOutCleanUp () {
-        mUsername = "ANONYMOUS";
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_SIGN_IN) {
-            if(resultCode == RESULT_OK) {
-                Toast.makeText(this, "Signed In", Toast.LENGTH_LONG).show();
-            }
-            else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Sign In Cancelled", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -303,7 +217,8 @@ public class NotificationActivity extends AppCompatActivity {
                 .setSmallIcon(android.R.drawable.stat_notify_chat)
                 .setDefaults(android.support.v4.app.NotificationCompat.DEFAULT_ALL)
                 .setContentTitle("Racing Team- " + name)
-                .setContentText(notificationText);
+                .setContentText(notificationText)
+                .setChannelId("My_Channel");
 
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
@@ -313,7 +228,8 @@ public class NotificationActivity extends AppCompatActivity {
 
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notificationBuilder.build());
+        notificationManager.notify(notiNum, notificationBuilder.build());
+        notiNum++;
 
     }
 
@@ -325,13 +241,6 @@ public class NotificationActivity extends AppCompatActivity {
         return postMessage;
     }
 
-    public static boolean loginStatus() {
-        return isLoggedIn;
-    }
-
-    public static String userName() {
-        return mUsername;
-    }
 
 
 }
