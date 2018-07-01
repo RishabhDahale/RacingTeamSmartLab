@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationBuilderWithBuilderAccessor;
@@ -71,6 +72,9 @@ public class NotificationActivity extends AppCompatActivity {
     private DatabaseReference mMessagesDatabaseReference;
     private static ChildEventListener mChildEventListener;
 
+    public static long viewedNotiNum=0;
+    public static long onFirebaseNoti;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,11 +134,14 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
 
+        //TODO: Add the onFirebaseNoti to shared preference and then extract again, then show the remaining number of notifications.
+
         mChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
                 mMessageAdapter.add(friendlyMessage);
+                onFirebaseNoti = dataSnapshot.getChildrenCount();
             }
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -151,7 +158,6 @@ public class NotificationActivity extends AppCompatActivity {
         };
         mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
 
-
         Query query = FirebaseDatabase.getInstance().getReference().child("messages").orderByKey().limitToLast(1);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -159,7 +165,10 @@ public class NotificationActivity extends AppCompatActivity {
                 for (DataSnapshot child: dataSnapshot.getChildren()) {
                     postName = child.child("name").getValue().toString();
                     postMessage = child.child("text").getValue().toString();
-                    notificationCall(postName ,postMessage);
+                    if (!postName.equals(StartActivity.getUserName())){
+                        notificationCall(postName ,postMessage);
+                    }
+
                 }
             }
 
@@ -168,10 +177,6 @@ public class NotificationActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-
 
     }
 
@@ -240,7 +245,6 @@ public class NotificationActivity extends AppCompatActivity {
     public static String getText() {
         return postMessage;
     }
-
 
 
 }
