@@ -14,6 +14,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +35,9 @@ public class StartActivity extends AppCompatActivity {
     public static long viewedNotiNum=0;
     public static long onFirebaseNoti;
 
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mMessagesDatabaseReference;
+
 
     public static String getUserName() {
         return mUsername;
@@ -44,6 +49,9 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("LabMembers");
 
         final List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
 
@@ -94,6 +102,16 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 changeText(inLab);
+                String loginTxt;
+                if (inLab) {
+                    loginTxt = "Not in lab";
+                }
+                else {
+                    loginTxt = "In lab";
+                }
+                LoginStatus loginStatus = new LoginStatus(getUserName(), loginTxt);
+                mMessagesDatabaseReference.child("name").setValue(getUserName());
+                mMessagesDatabaseReference.child("status").setValue(loginTxt);
                 inLab= !inLab;
             }
         });
@@ -104,18 +122,18 @@ public class StartActivity extends AppCompatActivity {
     private void changeText(Boolean inlab) {
         TextView changetext= findViewById(R.id.self_occupancy_status);
         if(!inlab) {
-            changetext.setText("Status- in lab");
+            changetext.setText("In lab");
             changetext.setTextColor(getResources().getColor(R.color.Green));
         }
         else {
-            changetext.setText("Status- not in lab");
+            changetext.setText("Not in lab");
             changetext.setTextColor(getResources().getColor(R.color.Red));
         }
     }
 
 
-    public void inventoryPage(View view) {
-        Intent i = new Intent(this, InventoryActivity.class);
+    public void InLabList(View view) {
+        Intent i = new Intent(this, InLabList.class);
         startActivity(i);
     }
 
@@ -164,6 +182,11 @@ public class StartActivity extends AppCompatActivity {
         }
 
     }
+
+    public void changeMyLoginStatus() {
+
+    }
+
 
 }
 
