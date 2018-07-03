@@ -134,14 +134,13 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
 
-        //TODO: Add the onFirebaseNoti to shared preference and then extract again, then show the remaining number of notifications.
 
         mChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
                 mMessageAdapter.add(friendlyMessage);
-                onFirebaseNoti = dataSnapshot.getChildrenCount();
+//                onFirebaseNoti = dataSnapshot.getChildrenCount();
             }
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -158,7 +157,7 @@ public class NotificationActivity extends AppCompatActivity {
         };
         mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("messages").orderByKey().limitToLast(1);
+        Query query = FirebaseDatabase.getInstance().getReference().child("messages").orderByKey().limitToLast(3);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
