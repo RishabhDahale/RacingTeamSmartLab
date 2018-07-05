@@ -46,7 +46,7 @@ public class FriendlyMessage {
         isSeen = status;
         return;
     }
-
+//changes for this branch
 
 }
 
