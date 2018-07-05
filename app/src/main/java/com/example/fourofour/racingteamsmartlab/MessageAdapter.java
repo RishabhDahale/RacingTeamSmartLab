@@ -47,7 +47,7 @@ public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
         return convertView;
     }
 
-    public void add(LoginStatus loginStatus) {
+    public void add() {
     }
 
     public void remove(LoginStatus loginStatus) {
