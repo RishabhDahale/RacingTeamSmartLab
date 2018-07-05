@@ -47,6 +47,7 @@ public class InLabList extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
+    public String finalRef = "In lab";
     public String finalLabList = "";
 
     @Override
@@ -82,158 +83,31 @@ public class InLabList extends AppCompatActivity {
             }
         };
 
-
-//        Query query = FirebaseDatabase.getInstance().getReference().child("LabMembers").limitToLast(100);
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot child: dataSnapshot.getChildren()) {
-//                    inLab = (boolean) child.child("status").getValue();
-//                    name = child.child("name").getValue().toString();
-//                    if(inLab) {
-//                        FriendlyMessage friendlyMessage = new FriendlyMessage(name, "", null);
-//                        mMessageAdapter.add(friendlyMessage);
-//
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
-
         final ArrayList <String> LabMembers = new ArrayList<String>(100);
 
         final TextView labList = (TextView)findViewById(R.id.LabMembersName);
 
-//        Query query = FirebaseDatabase.getInstance().getReference().child("LabMembers");
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for(DataSnapshot child: dataSnapshot.getChildren()) {
-////                    inLab = (boolean) child.child("status").getValue();
-////                    name = child.child("name").getValue().toString();
-//
-//                    LoginStatus loginStatus = child.getValue(LoginStatus.class);
-//                    inLab = loginStatus.getStatus();
-//                    name = loginStatus.getName();
-////                    Toast.makeText(getApplicationContext(), name, Toast.LENGTH_LONG).show();
-//                    if(inLab == true) {
-//                        labList.setText(labList.getText().toString() + "\n" + name);
-//                        Toast.makeText(getApplicationContext(), name, Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
 
-
-
-//        labList.setText((CharSequence) LabMembers);
-
-
-        mChildEventListener = new ChildEventListener() {
+        mMessagesDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                for(DataSnapshot child: dataSnapshot.getChildren()) {
-//                    loginTxt = child.child("status").getValue().toString();
-//                    name = child.child("name").getValue().toString();
-////                    LoginStatus loginStatus = child.getValue(LoginStatus.class);
-////                    inLab = loginStatus.getStatus();
-////                    name = loginStatus.getName();
-////                    if(loginTxt.equals("In lab")) {
-//                      finalLabList = finalLabList + "\n" + name;
-////                    }
-//                }
-                FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
-                Toast.makeText(getApplicationContext(), friendlyMessage.getText(), Toast.LENGTH_SHORT).show();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    FriendlyMessage friendlyMessage = child.getValue(FriendlyMessage.class);
+                    loginTxt = friendlyMessage.getText();
+                    name = friendlyMessage.getName();
+//                    Toast.makeText(getApplicationContext(), name, Toast.LENGTH_SHORT).show();
+                    if(loginTxt.equals(finalRef)) {
+                        labList.setText(labList.getText() + "\n" + name);
+                    }
+
+                }
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                for(DataSnapshot child: dataSnapshot.getChildren()) {
-//                    loginTxt = child.child("status").getValue().toString();
-//                    name = child.child("name").getValue().toString();
-////                    LoginStatus loginStatus = child.getValue(LoginStatus.class);
-////                    inLab = loginStatus.getStatus();
-////                    name = loginStatus.getName();
-////                    if(loginTxt.equals("In lab")) {
-////                        labList.setText(labList.getText().toString() + "\n" + name);
-////                    }
-////                    if(loginTxt.equals("In lab")) {
-//                        finalLabList = finalLabList + "\n" + name;
-////                    }
-//                }
-
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {            }
-        };
-//        mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
-
-//        mValueEventListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for(DataSnapshot child: dataSnapshot.getChildren()) {
-//                    loginTxt = child.child("status").getValue().toString();
-//                    name = child.child("name").getValue().toString();
-////                    LoginStatus loginStatus = child.getValue(LoginStatus.class);
-////                    inLab = loginStatus.getStatus();
-////                    name = loginStatus.getName();
-////                    if(loginTxt.equals("In lab")) {
-////                        labList.setText(labList.getText().toString() + "\n" + name);
-////                    }
-////                    if(loginTxt.equals("In lab")) {
-//                        finalLabList = finalLabList + "\n" + name;
-////                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-
-//        mMessagesDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for(DataSnapshot child: dataSnapshot.getChildren()) {
-//                    loginTxt = child.child("status").getValue().toString();
-//                    name = child.child("name").getValue().toString();
-////                    LoginStatus loginStatus = child.getValue(LoginStatus.class);
-////                    inLab = loginStatus.getStatus();
-////                    name = loginStatus.getName();
-////                    if(loginTxt.equals("In lab")) {
-////                        labList.setText(labList.getText().toString() + "\n" + name);
-////                    }
-////                    if(loginTxt.equals("In lab")) {
-//                    finalLabList = finalLabList + "\n" + name;
-////                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        });
 
         labList.setText(finalLabList);
 
