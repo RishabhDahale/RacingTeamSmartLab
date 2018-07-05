@@ -30,7 +30,8 @@
             android:name=".InLabList"
             android:parentActivityName=".StartActivity" />
         <activity android:name=".DeadlineActivity" />
-        <activity android:name=".LabSafetyActivity"></activity>
+        <activity android:name=".LabSafetyActivity" />
+        <activity android:name=".Machines"></activity>
     </application>
 
 </manifest>
