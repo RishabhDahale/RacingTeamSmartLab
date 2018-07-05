@@ -160,7 +160,7 @@ public class StartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 inLab= !inLab;
                 changeText(inLab);
-        
+
                 if (inLab) {
                     loginTxt = "Not in lab";
                 }
@@ -254,7 +254,14 @@ public class StartActivity extends AppCompatActivity {
         Intent i = new Intent(this, Machines.class);
         startActivity(i);
     }
-
+    public void deadlinePage (View view) {
+        Intent i = new Intent(this, DeadlineActivity.class);
+        startActivity(i);
+    }
+    public void safetyPage (View view) {
+        Intent i = new Intent(this, LabSafetyActivity.class);
+        startActivity(i);
+    }
 
 
     @Override
