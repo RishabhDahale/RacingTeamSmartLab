@@ -17,14 +17,14 @@
             android:id="@+id/InventoryCard"
             android:layout_width="180dp"
             android:layout_margin="10dp"
-            android:background="#FF8800"
+            android:background="#00AAFF"
             android:layout_height="130dp"
             android:layout_weight="1">
 
             <Button
                 android:textAlignment="center"
                 android:id="@+id/InventoryButton"
-                android:background="#FF8844"
+                android:background="#00AAFF"
                 android:text="@string/inventory"
                 android:textSize="20sp"
                 android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:layout_width="180dp"
             android:id="@+id/MachineCard"
             android:layout_margin="10dp"
-            android:background="#FF8844"
+            android:background="#00AAFF"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_toRightOf="@id/InventoryCard"
@@ -46,7 +46,7 @@
 
             <Button
                 android:textColor="#000000"
-                android:background="#FF8844"
+                android:background="#00AAFF"
                 android:text="@string/machines"
                 android:textSize="20sp"
                 android:textAlignment="center"
@@ -54,7 +54,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="180dp"
+            android:id="@+id/deadlineCard"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="#00AAFF"
+            android:layout_height="130dp">
 
+            <Button
+                android:id="@+id/deadlines"
+                android:text="SET DEADLINE"
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#000000"
+                android:background="#00AAFF"
+                android:onClick="deadlinePage"/>
+
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
     <LinearLayout
@@ -68,7 +86,7 @@
             android:id="@+id/notificationCard"
             android:layout_width="180dp"
             android:layout_margin="10dp"
-            android:background="#FF8844"
+            android:background="#00AAFF"
             android:layout_weight="1"
             android:layout_height="130dp">
 
@@ -76,7 +94,26 @@
                 android:id="@+id/notificationButton"
                 android:text="@string/create_notification"
                 android:textSize="20sp"
-                android:background="#FF8844"
+                android:background="#00AAFF"
+                android:textColor="#000000"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="notificationPage"/>
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:id="@+id/safetyCard"
+            android:layout_width="180dp"
+            android:layout_margin="10dp"
+            android:background="#00AAFF"
+            android:layout_weight="1"
+            android:layout_height="130dp">
+
+            <Button
+                android:id="@+id/labSafetyButton"
+                android:text="LAB SAFETY"
+                android:textSize="20sp"
+                android:background="#00AAFF"
                 android:textColor="#000000"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -84,12 +121,13 @@
 
         </android.support.v7.widget.CardView>
 
+
         <android.support.v7.widget.CardView
             android:layout_width="180dp"
             android:id="@+id/loginCard"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="#FF8844"
+            android:background="#00AAFF"
             android:layout_height="130dp">
 
             <Button
@@ -99,9 +137,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#000000"
-                android:background="#FF8844"/>
+                android:background="#00AAFF"/>
 
         </android.support.v7.widget.CardView>
+
 
 
     </LinearLayout>
@@ -113,10 +152,11 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/Linear2"
-        android:background="#FF8800"
+        android:background="#00AAFF"
         android:layout_marginLeft="150dp"
         android:layout_marginRight="15dp"
         android:text="Sign Out" />
+
 
     <TextView
         android:id="@+id/self_occupancy_status"
