@@ -26,7 +26,10 @@
         <activity
             android:name=".NotificationActivity"
             android:parentActivityName=".StartActivity" />
-        <activity android:name=".InLabList"
+        <activity
+            android:name=".InLabList"
+            android:parentActivityName=".StartActivity" />
+        <activity android:name=".Machines"
             android:parentActivityName=".StartActivity"></activity>
     </application>
 

@@ -1,6 +1,12 @@
 package com.example.fourofour.racingteamsmartlab;
 
-public class LoginStatus {
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+
+public class LoginStatus extends FriendlyMessage implements DatabaseReference.CompletionListener {
     private String name;
     private String status;
 
@@ -22,4 +28,8 @@ public class LoginStatus {
     }
 
 
+    @Override
+    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+
+    }
 }

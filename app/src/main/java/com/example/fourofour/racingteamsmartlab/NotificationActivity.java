@@ -85,6 +85,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("messages");
+        mMessagesDatabaseReference.keepSynced(true);
 
         // Initialize references to views
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -139,6 +140,7 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
+                Toast.makeText(getApplicationContext(), friendlyMessage.getText(), Toast.LENGTH_SHORT).show();
                 mMessageAdapter.add(friendlyMessage);
 //                onFirebaseNoti = dataSnapshot.getChildrenCount();
             }
@@ -157,7 +159,7 @@ public class NotificationActivity extends AppCompatActivity {
         };
         mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("messages").orderByKey().limitToLast(3);
+        Query query = FirebaseDatabase.getInstance().getReference().child("messages").orderByKey().limitToLast(1);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
