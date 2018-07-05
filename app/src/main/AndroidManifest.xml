@@ -29,12 +29,15 @@
         <activity
             android:name=".InLabList"
             android:parentActivityName=".StartActivity" />
-        <activity android:name=".DeadlineActivity"
-            android:parentActivityName=".StartActivity"></activity>
-        <activity android:name=".LabSafetyActivity"
-            android:parentActivityName=".StartActivity"></activity>
-        <activity android:name=".Machines"
-            android:parentActivityName=".StartActivity"></activity>
+        <activity
+            android:name=".DeadlineActivity"
+            android:parentActivityName=".StartActivity" />
+        <activity
+            android:name=".LabSafetyActivity"
+            android:parentActivityName=".StartActivity" />
+        <activity
+            android:name=".Machines"
+            android:parentActivityName=".StartActivity" />
     </application>
 
 </manifest>
