@@ -42,7 +42,7 @@ public class InLabList extends AppCompatActivity {
     public static boolean inLab;
     public static String name;
     public static String loginTxt;
-//changes for branch
+//changes for branch2.0
     public String[] LabList;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
