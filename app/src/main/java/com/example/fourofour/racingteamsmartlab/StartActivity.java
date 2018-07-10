@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
@@ -107,37 +108,18 @@ public class StartActivity extends AppCompatActivity {
 
         inLab = false;
 
-        mChildEventListener = new ChildEventListener() {
+        mMessagesDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                loginTxt1 = dataSnapshot.child(getUserName()).child("status").getValue().toString();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                FriendlyMessage friendlyMessage = dataSnapshot.child(getUserName()).getValue(FriendlyMessage.class);
+                loginTxt1 = friendlyMessage.getText();
+//                Toast.makeText(getApplicationContext(), loginTxt1, Toast.LENGTH_SHORT).show();
                 if (loginTxt1.equals("In lab")) {
                     inLab = true;
                 }
                 else {
                     inLab = false;
                 }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                loginTxt1 = dataSnapshot.child(getUserName()).child("text").getValue().toString();
-                if (loginTxt1.equals("In lab")) {
-                    inLab = true;
-                }
-                else {
-                    inLab = false;
-                }
-                Toast.makeText(getApplicationContext(), loginTxt, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
 
@@ -145,22 +127,23 @@ public class StartActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        };
+        });
 
-
+//        inLab = !inLab;
         labStatus= findViewById(R.id.labButton);
 //        inLab=false;
         TextView labstatus= findViewById(R.id.self_occupancy_status);
 //        inLab = !inLab;
-        changeText(inLab);
+        changeText(!inLab);
 //        labstatus.setTextColor(getResources().getColor(R.color.Red));
         labStatus.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                inLab= !inLab;
+//                For double click use this proceeding statement
+//                inLab= !inLab;
+
                 changeText(inLab);
-        
                 if (inLab) {
                     loginTxt = "Not in lab";
                 }
@@ -172,6 +155,11 @@ public class StartActivity extends AppCompatActivity {
                 FriendlyMessage friendlyMessage = new FriendlyMessage(loginTxt, getUserName(), null);
                 mMessagesDatabaseReference.child(getUserName()).setValue(friendlyMessage);
 
+
+//              For single click use this proceeding statement
+                inLab= !inLab;
+
+
 //                mMessagesDatabaseReference.child(getUserName()).child("name").setValue(getUserName());
 //                mMessagesDatabaseReference.child(getUserName()).child("status").setValue(loginTxt);
 
@@ -179,46 +167,6 @@ public class StartActivity extends AppCompatActivity {
         });
 
         final TextView labList = (TextView)findViewById(R.id.LabMembersName);
-
-        mChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                for(DataSnapshot child: dataSnapshot.getChildren()) {
-                    loginTxt1 = child.child("status").getValue().toString();
-                    name = child.child("name").getValue().toString();
-//                    LoginStatus loginStatus = child.getValue(LoginStatus.class);
-//                    inLab = loginStatus.getStatus();
-//                    name = loginStatus.getName();
-                    if(loginTxt.equals("In lab")) {
-                        labList.setText(labList.getText().toString() + "\n" + name);
-                    }
-                }
-            }
-
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                for(DataSnapshot child: dataSnapshot.getChildren()) {
-                    loginTxt1 = child.child("status").getValue().toString();
-                    name = child.child("name").getValue().toString();
-//                    LoginStatus loginStatus = child.getValue(LoginStatus.class);
-//                    inLab = loginStatus.getStatus();
-//                    name = loginStatus.getName();
-                    if(loginTxt.equals("In lab")) {
-                        labList.setText(labList.getText().toString() + "\n" + name);
-                    }
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {            }
-        };
 
 
     }
@@ -242,9 +190,6 @@ public class StartActivity extends AppCompatActivity {
     }
 
 
-
-
-
     public void notificationPage (View view) {
         Intent i = new Intent(this, NotificationActivity.class);
         startActivity(i);
@@ -254,37 +199,37 @@ public class StartActivity extends AppCompatActivity {
         Intent i = new Intent(this, Machines.class);
         startActivity(i);
     }
-
-
+    public void deadlinePage (View view) {
+        Intent i = new Intent(this, DeadlineActivity.class);
+        startActivity(i);
+    }
+    public void safetyPage (View view) {
+        Intent i = new Intent(this, LabSafetyActivity.class);
+        startActivity(i);
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
         mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-        mChildEventListener = new ChildEventListener() {
+        mMessagesDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                inLab = (boolean) dataSnapshot.child("LabMembers").child(getUserName()).child("status").getValue();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                inLab = (boolean) dataSnapshot.child("LabMembers").child(getUserName()).child("status").getValue();
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                FriendlyMessage friendlyMessage = dataSnapshot.child(getUserName()).getValue(FriendlyMessage.class);
+                loginTxt1 = friendlyMessage.getText();
+//                Toast.makeText(getApplicationContext(), loginTxt1, Toast.LENGTH_SHORT).show();
+                if (loginTxt1.equals("In lab")) {
+                    inLab = true;
+                }
+                else {
+                    inLab = false;
+                }
 
             }
 
@@ -292,8 +237,8 @@ public class StartActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        };
-        super.onResume();
+        });
+        changeText(!inLab);
     }
 
     private void onSignedInInitialize(String username) {

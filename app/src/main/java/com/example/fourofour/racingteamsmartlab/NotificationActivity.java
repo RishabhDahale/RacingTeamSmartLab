@@ -140,7 +140,7 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
-                Toast.makeText(getApplicationContext(), friendlyMessage.getText(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), friendlyMessage.getText(), Toast.LENGTH_SHORT).show();
                 mMessageAdapter.add(friendlyMessage);
 //                onFirebaseNoti = dataSnapshot.getChildrenCount();
             }
