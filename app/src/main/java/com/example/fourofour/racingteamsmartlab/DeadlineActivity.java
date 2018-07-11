@@ -54,6 +54,7 @@ public class DeadlineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_deadline);
         mHelper = new TaskDbHelper(this);
         mTaskListView = (ListView) findViewById(R.id.list_todo);
+        updateUI();
     }
 
     @Override
@@ -88,6 +89,7 @@ public class DeadlineActivity extends AppCompatActivity {
                         .setNegativeButton("Cancel", null)
                         .create();
                 dialog.show();
+                updateUI();
                 return true;
 
             default:
