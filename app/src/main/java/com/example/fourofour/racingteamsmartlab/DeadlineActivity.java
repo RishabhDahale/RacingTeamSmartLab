@@ -40,8 +40,6 @@ import java.util.List;
 
 import static com.example.fourofour.racingteamsmartlab.StartActivity.getUserName;
 
-
-
 public class DeadlineActivity extends AppCompatActivity {
     private static final String TAG = "DeadlineActivity";
     private TaskDbHelper mHelper;
@@ -68,26 +66,30 @@ public class DeadlineActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_add_task:
                 final EditText taskEditText = new EditText(this);
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle("Add a new task")
-                        .setMessage("What do you want to do next?")
-                        .setView(taskEditText)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String task = String.valueOf(taskEditText.getText());
-                                SQLiteDatabase db = mHelper.getWritableDatabase();
-                                ContentValues values = new ContentValues();
-                                values.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
-                                db.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
-                                        null,
-                                        values,
-                                        SQLiteDatabase.CONFLICT_REPLACE);
-                                db.close();
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .create();
+                final EditText taskEditText2= new EditText(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Add a new task");
+                builder.setMessage("What is your next task?");
+                builder.setView(taskEditText);
+                builder.setMessage("When do you wish to complete it? (dd/mm/yy hh:mm)");
+                builder.setView(taskEditText2);
+                builder.setPositiveButton("Set Deadline", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String task = String.valueOf(taskEditText.getText());
+                        task= task+ " to be done by " + String.valueOf(taskEditText2.getText());
+                        SQLiteDatabase db = mHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        values.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
+                        db.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
+                                null,
+                                values,
+                                SQLiteDatabase.CONFLICT_REPLACE);
+                        db.close();
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                AlertDialog dialog = builder.create();
                 dialog.show();
                 updateUI();
                 return true;
@@ -125,6 +127,7 @@ public class DeadlineActivity extends AppCompatActivity {
     public void deleteTask(View view) {
         View parent = (View) view.getParent();
         TextView taskTextView = (TextView) parent.findViewById(R.id.task_title);
+        TextView dtTextView= (TextView) parent.findViewById(R.id.task_date_time);
         String task = String.valueOf(taskTextView.getText());
         SQLiteDatabase db = mHelper.getWritableDatabase();
         db.delete(TaskContract.TaskEntry.TABLE,
